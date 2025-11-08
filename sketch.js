@@ -1,6 +1,7 @@
 let letters = [];
 let images = {};
 let modalVisible = false;
+let isHelpModalVisible = true; // 新增變數，追蹤說明框是否可見
 let currentImage = null;
 let modalWidth, modalHeight, modalX, modalY;
 let closeButtonSize = 30;
@@ -88,6 +89,11 @@ function draw() {
 }
 
 function mousePressed() {
+  // 如果說明框是可見的，則不執行任何遊戲內的點擊邏輯
+  if (isHelpModalVisible) {
+    return;
+  }
+
   if (modalVisible) {
     // 檢查是否點擊了關閉按鈕
     if (dist(mouseX, mouseY, closeButtonX + closeButtonSize / 2, closeButtonY + closeButtonSize / 2) < closeButtonSize / 2) {
@@ -131,4 +137,9 @@ function mousePressed() {
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
   setup(); // 重新計算佈局
+}
+
+// 這個函式會被 HTML 中的 JavaScript 呼叫
+function setHelpModalVisible(visible) {
+  isHelpModalVisible = visible;
 }
