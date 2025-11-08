@@ -1,2 +1,162 @@
-幫我在意開始進去的時候產生一個框框 上面是寫"玩法說明 找到每個字母的大寫跟小寫把他們配對在一起吧 按住字母拉住它去找對應的字母吧" 右上角會有個叉叉可以關掉框框 而在遊戲畫面右上角會有個圓形裡面是問號 按下去就會是那個說明框框 可以在中途在看玩法說明
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>遊戲玩法說明範例</title>
+<style>
+    /* --- 基本頁面樣式 --- */
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f0f0f0;
+    }
 
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+
+    /* --- 右上角的問號按鈕 --- */
+    .help-button {
+        position: fixed; /* 固定在畫面上 */
+        top: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        background-color: #007BFF;
+        color: white;
+        border-radius: 50%; /* 圓形 */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        z-index: 1000; /* 確保在最上層 */
+    }
+
+    .help-button:hover {
+        background-color: #0056b3;
+    }
+
+    /* --- 說明框 (Modal) 的背景 --- */
+    .modal-overlay {
+        display: none; /* 預設隱藏 */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6); /* 半透明黑色背景 */
+        justify-content: center;
+        align-items: center;
+        z-index: 1001; /* 確保在問號按鈕之上 */
+    }
+
+    /* --- 說明框的內容 --- */
+    .modal-content {
+        background-color: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        width: 90%;
+        max-width: 450px;
+        text-align: center;
+        position: relative; /* 為了定位關閉按鈕 */
+        animation: fadeIn 0.3s; /* 加入淡入動畫 */
+    }
+
+    /* --- 說明框的標題和內文 --- */
+    .modal-content h2 {
+        margin-top: 0;
+        color: #333;
+    }
+
+    .modal-content p {
+        font-size: 18px;
+        color: #555;
+        line-height: 1.6;
+    }
+
+    /* --- 右上角的叉叉關閉按鈕 --- */
+    .close-button {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 30px;
+        color: #888;
+        cursor: pointer;
+    }
+
+    .close-button:hover {
+        color: #000;
+    }
+    
+    /* --- 淡入動畫效果 --- */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
+    }
+</style>
+</head>
+<body>
+
+    <!-- 右上角的問號按鈕 -->
+    <div class="help-button" id="openHelpModal">?</div>
+
+    <!-- 玩法說明框 (Modal) -->
+    <div class="modal-overlay" id="helpModal">
+        <div class="modal-content">
+            <!-- 叉叉關閉按鈕 -->
+            <span class="close-button" id="closeHelpModal">&times;</span>
+            <h2>玩法說明</h2>
+            <p>點選字母會出現字卡，一起認識字母吧～</p>
+        </div>
+    </div>
+
+<!-- 引入 p5.js 函式庫 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.js"></script>
+<!-- 引入你的 p5.js 遊戲腳本 -->
+<script src="sketch.js"></script>
+
+<script>
+    // 獲取我們需要的 HTML 元素
+    const helpModal = document.getElementById('helpModal');
+    const openHelpBtn = document.getElementById('openHelpModal');
+    const closeHelpBtn = document.getElementById('closeHelpModal');
+
+    // 顯示說明框的函式，並通知 sketch.js
+    function showModal() {
+        helpModal.style.display = 'flex'; // 將 display 設為 flex 來啟用置中效果
+        if (typeof setHelpModalVisible === 'function') {
+            setHelpModalVisible(true);
+        }
+    }
+
+    // 隱藏說明框的函式，並通知 sketch.js
+    function hideModal() {
+        helpModal.style.display = 'none';
+        if (typeof setHelpModalVisible === 'function') {
+            setHelpModalVisible(false);
+        }
+    }
+
+    // 1. 頁面載入完成後，立即顯示說明框
+    window.addEventListener('load', showModal);
+
+    openHelpBtn.addEventListener('click', showModal);
+    closeHelpBtn.addEventListener('click', hideModal);
+
+    // 4. 點擊說明框以外的灰色區域時，也隱藏說明框
+    window.addEventListener('click', function(event) {
+        if (event.target == helpModal) {
+            hideModal();
+        }
+    });
+</script>
+
+</body>
+</html>
